@@ -1,18 +1,26 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Roles } from './Roles';
 
 @Entity()
-export class User {
+export class Users {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @PrimaryGeneratedColumn()
-    id: number
+  @Column('varchar', { length: 64 })
+  lastName: string;
 
-    @Column()
-    firstName: string
+  @Column('varchar', { length: 64 })
+  firstName: string;
 
-    @Column()
-    lastName: string
+  @Column('varchar', { length: 64 })
+  surname: string;
 
-    @Column()
-    age: number
+  @Column('varchar', { length: 64 })
+  email: string;
 
+  @Column('varchar', { length: 150 })
+  user_pass: string;
+
+  @OneToMany(() => Roles, (role) => role.id)
+  role_id: number;
 }
