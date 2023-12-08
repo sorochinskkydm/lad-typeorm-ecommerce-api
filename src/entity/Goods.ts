@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from 'typeorm';
 import { Producers } from './Producers';
+import { Cart } from './Cart';
 
 @Entity()
 export class Goods {
@@ -9,11 +10,14 @@ export class Goods {
   @Column('varchar', { length: 64 })
   title: string;
 
-  @OneToMany(() => Producers, (producer) => producer.id)
-  producer_id: number;
+  @ManyToOne(() => Producers, (producer) => producer.producer_name)
+  producer: Producers;
 
-  @OneToMany(() => Good_types, (good_type) => good_type.id)
-  type_id: number;
+  @ManyToOne(() => Good_types, (type) => type.type_name)
+  type: Good_types;
+
+  @ManyToOne(() => Cart, (cart) => cart.id)
+  cart: Cart;
 
   @Column('text')
   description: string;
@@ -26,4 +30,7 @@ export class Good_types {
 
   @Column('varchar', { length: 32 })
   type_name: string;
+
+  @OneToMany(() => Goods, (good) => good.title)
+  good: Goods;
 }

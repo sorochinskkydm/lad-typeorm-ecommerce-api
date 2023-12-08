@@ -7,7 +7,7 @@ import { Producers } from './entity/Producers';
 import { Cart } from './entity/Cart';
 import { Orders } from './entity/Orders';
 
-export const AppDataSource = new DataSource({
+export const appDataSource = new DataSource({
   type: 'postgres',
   host: 'localhost',
   port: 5432,
@@ -17,4 +17,5 @@ export const AppDataSource = new DataSource({
   logging: false,
   entities: [Users, Roles, Goods, Good_types, Producers, Cart, Orders],
   migrations: [],
+  synchronize: true,
 });

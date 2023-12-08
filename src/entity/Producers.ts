@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Goods } from './Goods';
 
 @Entity()
 export class Producers {
@@ -10,4 +11,7 @@ export class Producers {
 
   @Column('varchar', { length: 32 })
   country: string;
+
+  @OneToMany(() => Goods, (good) => good.title)
+  good: Goods;
 }

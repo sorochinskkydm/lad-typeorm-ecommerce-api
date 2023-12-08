@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from 'typeorm';
 import { Goods } from './Goods';
 import { Users } from './User';
 
@@ -7,14 +7,17 @@ export class Orders {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToMany(() => Users, (user) => user.id)
-  user_id: number;
+  @ManyToOne(() => Users, (user) => user.id)
+  user: Users;
 
-  @OneToMany(() => Goods, (good) => good.id)
-  good_id: number;
+  @ManyToOne(() => Goods, (good) => good.id)
+  good: Goods;
 
   @Column('int')
   count: number;
+
+  @Column({ type: 'time without time zone' })
+  date: any;
 
   @PrimaryGeneratedColumn('uuid')
   order_id: string;
