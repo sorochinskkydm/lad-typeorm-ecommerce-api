@@ -17,5 +17,5 @@ export const appDataSource = new DataSource({
   logging: false,
   entities: [Users, Roles, Goods, Good_types, Producers, Cart, Orders],
   migrations: [],
-  synchronize: true,
+  // synchronize: true,
 });

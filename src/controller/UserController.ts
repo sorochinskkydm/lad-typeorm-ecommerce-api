@@ -6,12 +6,12 @@ import * as bcrypt from 'bcrypt';
 import { validationResult } from 'express-validator';
 
 interface IUser {
-  id: number;
-  lastName: string;
-  firstName: string;
-  surname: string;
-  email: string;
-  user_pass: string;
+  id?: number;
+  lastName?: string;
+  firstName?: string;
+  surname?: string;
+  email?: string;
+  user_pass?: string;
 }
 
 const userRepository = appDataSource.getRepository(Users);
@@ -44,26 +44,81 @@ export const registerController = async (
       //Создание токена с id пользователя
       const token = jwt.sign(
         {
-          // id: user.rows[0].id,
-          // role: user.rows[0].role_id,
+          id: user.id,
+          role: user.role_name,
         },
         'someDifficultKey',
         {
           expiresIn: '30d',
         },
       );
+
+      return response.status(200).json({
+        message: 'success',
+        ...user,
+        token,
+      });
     } else {
       return response.status(403).json({
         message: 'Данный адрес уже занят',
       });
     }
-    return response.status(200).json({
-      message: 'success',
-    });
   } catch (error) {
     console.log(error);
     return response.status(500).json({
       message: 'Не удалось зарегистрировать пользователя',
+    });
+  }
+};
+
+export const authController = async (request: Request, response: Response) => {
+  try {
+    const { email, user_pass }: IUser = request.body;
+    //Выборка пользователя из БД
+    const user = await userRepository.findBy({
+      email,
+    });
+    //Выборка пароля пользователя
+    const passwordHash = await userRepository.find({
+      select: {
+        user_pass: true,
+      },
+      where: {
+        email,
+      },
+    });
+    if (!user) {
+      return response.status(404).json({
+        message: 'Пользователь не найден',
+      });
+    }
+    //Сравнение паролей
+    const isValidPassword = await bcrypt.compare(user_pass, passwordHash[0].user_pass);
+    if (!isValidPassword) {
+      return response.status(404).json({
+        message: 'Неверный логин или пароль',
+      });
+    }
+    //Создание нового токена при авторизации
+    const token = jwt.sign(
+      {
+        id: user[0].id,
+        role: user[0].role_name,
+      },
+      'someDifficultKey',
+      {
+        expiresIn: '30d',
+      },
+    );
+    response.status(200).json({
+      message: 'Успешная авторизация',
+      user: user[0],
+      token,
+    });
+  } catch (error) {
+    console.log(error);
+    response.status(404).json({
+      message: 'Не удалось авторизоваться',
     });
   }
 };

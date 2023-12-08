@@ -2,9 +2,8 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import { Request, Response } from 'express';
 import { appDataSource } from './data-source';
-// import { UserController } from './controller/UserController';
 import * as UserController from './controller/UserController';
-import { Users } from './entity/User';
+import checkAuth from './utils/checkAuth';
 // import { Routes } from './routes';
 
 //Initializing connection to DB
@@ -35,6 +34,7 @@ appDataSource
     // ...
 
     app.post('/api/auth/register', UserController.registerController);
+    app.post('/api/auth/login', checkAuth, UserController.authController);
 
     app.listen(PORT, () => {
       console.log(`Server started on ${PORT} port.`);
