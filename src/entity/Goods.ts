@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, OneToOne } from 'typeorm';
 import { Producers } from './Producers';
 import { Cart } from './Cart';
 
@@ -16,11 +16,14 @@ export class Goods {
   @ManyToOne(() => Good_types, (type) => type.type_name)
   type: Good_types;
 
-  @ManyToOne(() => Cart, (cart) => cart.id)
+  @OneToMany(() => Cart, (cart) => cart.id)
   cart: Cart;
 
   @Column('text')
   description: string;
+
+  @Column('int')
+  price: number;
 }
 
 @Entity()
