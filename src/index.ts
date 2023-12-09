@@ -4,9 +4,10 @@ import * as bodyParser from 'body-parser';
 import * as UserController from './controller/UserController';
 import * as GoodsController from './controller/GoodsController';
 import * as CustomersController from './controller/CustomersController';
+import * as CartController from './controller/CartController';
+
 import checkAuth from './utils/checkAuth';
 import checkRole from './utils/checkRole';
-// import { Routes } from './routes';
 
 //Initializing connection to DB
 appDataSource
@@ -16,24 +17,6 @@ appDataSource
     const PORT = process.env.PORT || 8080;
     const app = express();
     app.use(bodyParser.json());
-
-    // register express routes from defined application routes
-    // Routes.forEach((route) => {
-    //   (app as any)[route.method](
-    //     route.route,
-    //     async (request: Request, response: Response, next: Function) => {
-    //       const result = await new (route.controller as any)()[route.action](
-    //         request,
-    //         response,
-    //         next,
-    //       );
-    //       response.json('hi');
-    //     },
-    //   );
-    // });
-
-    // setup express app here
-    // ...
 
     //Auth&Register routes
     app.post('/api/auth/register', UserController.registerController);
@@ -54,6 +37,10 @@ appDataSource
     app.get('/api/customers/:id', checkAuth, checkRole, CustomersController.getCustomerById);
     app.put('/api/customers/:id', checkAuth, checkRole, CustomersController.updateCustomer);
     app.delete('/api/customers/:id', checkAuth, checkRole, CustomersController.deleteCustomer);
+
+    //Cart routes
+    app.get('/api/cart', checkAuth, CartController.getCart);
+    app.post('/api/cart', checkAuth, CartController.addToCart);
 
     app.listen(PORT, () => {
       console.log(`Server started on ${PORT} port.`);
