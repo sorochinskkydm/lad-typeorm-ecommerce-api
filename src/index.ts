@@ -1,9 +1,11 @@
+import { appDataSource } from './data-source';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
-import { Request, Response } from 'express';
-import { appDataSource } from './data-source';
 import * as UserController from './controller/UserController';
+import * as GoodsController from './controller/GoodsController';
+import * as CustomersController from './controller/CustomersController';
 import checkAuth from './utils/checkAuth';
+import checkRole from './utils/checkRole';
 // import { Routes } from './routes';
 
 //Initializing connection to DB
@@ -37,6 +39,21 @@ appDataSource
     app.post('/api/auth/register', UserController.registerController);
     app.post('/api/auth/login', checkAuth, UserController.authController);
     app.get('/api/users/me', checkAuth, UserController.getMeController);
+
+    //Goods routes
+    app.get('/api/goods', GoodsController.getGoods);
+    app.get('/api/goods/:id', GoodsController.getGoodById);
+
+    //Admin goods routes
+    app.post('/api/goods', checkAuth, checkRole, GoodsController.addGoods);
+    app.put('/api/goods/:id', checkAuth, checkRole, GoodsController.updateGoods);
+    app.delete('/api/goods/:id', checkAuth, checkRole, GoodsController.removeGoods);
+
+    //Admin customers routes
+    app.get('/api/customers', checkAuth, checkRole, CustomersController.getCustomers);
+    app.get('/api/customers/:id', checkAuth, checkRole, CustomersController.getCustomerById);
+    app.put('/api/customers/:id', checkAuth, checkRole, CustomersController.updateCustomer);
+    app.delete('/api/customers/:id', checkAuth, checkRole, CustomersController.deleteCustomer);
 
     app.listen(PORT, () => {
       console.log(`Server started on ${PORT} port.`);

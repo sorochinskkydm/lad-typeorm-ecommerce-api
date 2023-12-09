@@ -5,15 +5,7 @@ import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
 import { requestUserId } from '../utils/checkAuth';
 import { validationResult } from 'express-validator';
-
-interface IUser {
-  id?: number;
-  lastName?: string;
-  firstName?: string;
-  surname?: string;
-  email?: string;
-  user_pass?: string;
-}
+import { IUser } from '../interfaces/interfaces';
 
 const userRepository = appDataSource.getRepository(Users);
 export const registerController = async (
