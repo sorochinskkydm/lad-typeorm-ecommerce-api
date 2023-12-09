@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
-export let requestUserId = '';
+export let requestUserId = 0;
 export default async (request: Request, response: Response, next: NextFunction) => {
   const token = (request.headers.authorization || '').replace(/Bearer\s/, '');
   if (token) {
     try {
       const decodedToken = jwt.verify(token, 'someDifficultKey');
-      const requestId: string = (<any>decodedToken).id;
+      const requestId: number = (<any>decodedToken).id;
       requestUserId = requestId;
       next();
     } catch (error) {

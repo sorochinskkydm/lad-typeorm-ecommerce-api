@@ -33,8 +33,10 @@ appDataSource
     // setup express app here
     // ...
 
+    //Auth&Register routes
     app.post('/api/auth/register', UserController.registerController);
     app.post('/api/auth/login', checkAuth, UserController.authController);
+    app.get('/api/users/me', checkAuth, UserController.getMeController);
 
     app.listen(PORT, () => {
       console.log(`Server started on ${PORT} port.`);

@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import { Users } from '../entity/User';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
+import { requestUserId } from '../utils/checkAuth';
 import { validationResult } from 'express-validator';
 
 interface IUser {
@@ -120,6 +121,22 @@ export const authController = async (request: Request, response: Response) => {
     response.status(404).json({
       message: 'Не удалось авторизоваться',
     });
+  }
+};
+
+export const getMeController = async (request: Request, response: Response) => {
+  try {
+    const user = await userRepository.find({
+      where: {
+        id: requestUserId,
+      },
+    });
+    return response.status(200).json({
+      message: 'success',
+      user: user[0],
+    });
+  } catch (error) {
+    console.log(error);
   }
 };
 // export class UserController {
