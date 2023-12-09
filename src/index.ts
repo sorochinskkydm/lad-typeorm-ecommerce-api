@@ -5,6 +5,7 @@ import * as UserController from './controller/UserController';
 import * as GoodsController from './controller/GoodsController';
 import * as CustomersController from './controller/CustomersController';
 import * as CartController from './controller/CartController';
+import * as OrdersController from './controller/OrdersController';
 
 import checkAuth from './utils/checkAuth';
 import checkRole from './utils/checkRole';
@@ -41,6 +42,20 @@ appDataSource
     //Cart routes
     app.get('/api/cart', checkAuth, CartController.getCart);
     app.post('/api/cart', checkAuth, CartController.addToCart);
+
+    //Orders routes
+    app.post('/api/orders', checkAuth, OrdersController.createAnOrder);
+    // app.get('/api/orders/:id', checkAuth, OrdersController.getOrdersById);
+
+    // //Admin orders routes
+    // app.get('/api/orders', checkAuth, checkRole, OrdersController.getOrders);
+    // app.put(
+    //   '/api/orders/:id',
+    //   checkAuth,
+    //   checkRole,
+    //   OrdersController.updateOrder,
+    // );
+    // app.delete('/api/orders/:id', checkAuth, checkRole, OrdersController.deleteOrder);
 
     app.listen(PORT, () => {
       console.log(`Server started on ${PORT} port.`);

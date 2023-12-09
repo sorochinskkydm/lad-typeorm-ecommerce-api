@@ -37,18 +37,14 @@ export const getCart = async (request: Request, response: Response) => {
     const token = (request.headers.authorization || '').replace(/Bearer\s/, '');
     const decodedToken = jwt.verify(token, 'someDifficultKey');
     const user_id = (<any>decodedToken).id;
-    const data = [];
-    await cartRepository
-      .find({
-        where: {
-          user: user_id,
-        },
-      })
-      .then((result) => result.map((item) => data.push(item)));
-
+    const cart = await cartRepository.find({
+      where: {
+        user: user_id,
+      },
+    });
     return response.status(200).json({
       message: 'success',
-      cart: data,
+      cart,
     });
   } catch (error) {
     console.log(error);
